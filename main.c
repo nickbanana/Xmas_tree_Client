@@ -10,7 +10,8 @@
 #define Branch_Gre
 //#define Branch_Blu
 
-
+// 上方 include 和 define 為 選擇device (控制 LED1 LED2 Branch R/G/B)
+//並在header檔寫入pin 腳輸出分配
 
   int count =0;
   extern unsigned char Buf[8];
@@ -41,9 +42,9 @@ void main(void)
   UCA0CTL1 |= UCSSEL_2;                    // CLK = SMCLK
   //P1DIR |= BIT0;
   //P1OUT &= ~BIT0;
-  port_config();
-  clear_buf();
-  count=0;
+  port_config();                        //設定port
+  clear_buf();                          //清除buf
+  count=0;                              //接收到的byte數
   //P4DIR |= BIT7;
   //P4OUT &= ~BIT7;
 
@@ -78,11 +79,11 @@ __interrupt void USCI_A0_ISR(void)
         {
           count=0;
         }
-        if(Buf[0]==start&&count<8)
+        if(Buf[0]==start&&count<8)              //如果起始byte正確 持續接收
         {          
           count++;
         }
-        if(Buf[0]==start&&count==8)
+        if(Buf[0]==start&&count==8)             //接收完畢 開始分析
         {
           count=0;
           #ifdef LEDONE
